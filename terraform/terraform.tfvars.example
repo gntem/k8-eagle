@@ -1,0 +1,61 @@
+# Example terraform.tfvars file
+# Copy this to terraform.tfvars and customize for your environment
+
+# Kubernetes namespace
+namespace = "monitoring"
+
+# Docker image configuration
+image_name = "k8-eagle"
+image_tag  = "latest"
+
+# Deployment configuration
+replicas = 1
+
+# Resource limits
+resources = {
+  requests = {
+    memory = "128Mi"
+    cpu    = "250m"
+  }
+  limits = {
+    memory = "512Mi"
+    cpu    = "1000m"
+  }
+}
+
+# Watchers configuration
+watchers = [
+  {
+    name            = "production-frontend"
+    deployment_name = "web-app"
+    namespace       = "production"
+    webhooks = [
+      {
+        url            = "https://hooks.slack.com/services/YOUR/SLACK/WEBHOOK"
+        auth_token_key = "slack-token"
+      }
+    ]
+  },
+  {
+    name            = "production-backend"
+    deployment_name = "api-server"
+    namespace       = "production"
+    webhooks = [
+      {
+        url            = "https://discord.com/api/webhooks/YOUR/DISCORD/WEBHOOK"
+        auth_token_key = "discord-token"
+      },
+      {
+        url            = "https://webhook.site/your-unique-id"
+        auth_token_key = "webhook-token"
+      }
+    ]
+  }
+]
+
+# Authentication tokens (keep these secure!)
+auth_tokens = {
+  slack-token   = "xoxb-your-slack-bot-token"
+  discord-token = "your-discord-webhook-token"
+  webhook-token = "your-custom-webhook-token"
+}
